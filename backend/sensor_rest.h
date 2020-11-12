@@ -2,6 +2,7 @@
 #define __sensor_rest_api__
 
 #include <algorithm>
+#include <string>
 
 #include <iostream>
 #include <pistache/http.h>
@@ -52,7 +53,7 @@ class sensor_rest : public rest_api {
 	void setup_routes() override
 	{
 		Pistache::Rest::Routes::Post(
-			this->get_router(), "/record/:name/:value?",
+			this->get_router(), "/sensor/:id/:value",
 			Pistache::Rest::Routes::bind(&sensor_rest::record_data,
 						     this));
 	}
@@ -60,7 +61,12 @@ class sensor_rest : public rest_api {
 	void record_data(const Pistache::Rest::Request &request,
 			 Pistache::Http::ResponseWriter response) override
 	{
-		std::cout << "Got record data" << std::endl;
+		auto id = request.param(":id").as<std::string>();
+		auto value = request.param(":value").as<int>();
+
+		//TOOD: database
+
+		std::cout << "Got record data with id: " << id << " and value: " << value <<std::endl;
 		response.send(Pistache::Http::Code::Ok, "recieved");
 	}
 	private:
