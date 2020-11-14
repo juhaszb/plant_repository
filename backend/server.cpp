@@ -1,22 +1,21 @@
 #include <iostream>
+#include <thread>
+
+#include "sensor_rest.h"
+#include "actor_api.h"
+#include "client_api.h"
+
 
 #include <pistache/net.h>
 
-#include "sensor_rest.h"
-#include <thread>
-
-
 void sensor_api1()
 {
-
 	Pistache::Port port(9999);
-	
+
 	Pistache::Address addr(Pistache::Ipv4::any(), port);
 
-	sensor_rest sr(addr);
-
+	actor_api sr(addr);
 }
-
 
 int main()
 {
@@ -26,8 +25,7 @@ int main()
 
 	Pistache::Address addr2(Pistache::Ipv4::any(), port2);
 
-	sensor_rest sr2(addr2);
-
+	client_api sr2(addr2);
 
 	return 0;
 }

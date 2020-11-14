@@ -69,8 +69,6 @@ class sensor_rest : public rest_api {
 		std::cout << "Got record data with id: " << id << " and value: " << value <<std::endl;
 		response.send(Pistache::Http::Code::Ok, "recieved");
 	}
-	private:
-	Pistache::Rest::Router router;
 };
 
 #endif
