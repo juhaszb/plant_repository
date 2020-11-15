@@ -11,7 +11,7 @@ class actors {
     public:
 	static std::shared_ptr<actors> get_instance()
 	{
-		std::shared_ptr<actors> instance(new actors());
+		static std::shared_ptr<actors> instance(new actors());
 
 		return instance;
 	}
