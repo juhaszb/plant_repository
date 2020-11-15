@@ -4,6 +4,7 @@
 #include <memory>
 #include <pistache/net.h>
 #include <vector>
+#include <string>
 
 #include "actor.h"
 
@@ -30,7 +31,7 @@ class actors {
 		return ids;
 	}
 
-	int get_value_id(int id)
+	std::string get_value_id(int id)
 	{
 		for (auto s : actor_list) {
 			if (s.get_id() == id)
@@ -38,7 +39,7 @@ class actors {
 		}
 		return 0;
 	}
-	void set_value_id(int id, int value)
+	void set_value_id(int id, std::string value)
 	{
 		for (auto s : actor_list) {
 			if (s.get_id() == id) {

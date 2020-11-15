@@ -2,6 +2,8 @@
 #define __actor_h__
 
 #include <pistache/net.h>
+#include <pistache/client.h>
+#include <string>
 class actor
 {
 public:
@@ -12,19 +14,22 @@ public:
 		return id;
 	}
 
-	void set_value(int value)
+	void set_value(std::string value)
 	{
 		this->value = value;
+		Pistache::Http::Client client;	
+		std::string page = addr.host()+ ":" + addr.port().toString() + "/send";
+		client.post(page).body(value);
 	}
 
-	int get_value(void) const 
+	std::string get_value(void) const 
 	{
 		return value;
 	}
 
 private:
 	int id; 
-	int value;
+	std::string value;
 	Pistache::Address addr;
 };
 
