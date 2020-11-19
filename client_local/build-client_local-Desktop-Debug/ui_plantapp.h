@@ -12,7 +12,7 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
@@ -26,8 +26,7 @@ class Ui_PlantApp
 public:
     QAction *actionAdd_Plant;
     QWidget *centralwidget;
-    QWidget *gridLayoutWidget;
-    QGridLayout *gridLayout;
+    QLineEdit *lineEdit;
     QMenuBar *menubar;
     QMenu *menuPlant_Reposity;
     QStatusBar *statusbar;
@@ -41,12 +40,9 @@ public:
         actionAdd_Plant->setObjectName(QString::fromUtf8("actionAdd_Plant"));
         centralwidget = new QWidget(PlantApp);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        gridLayoutWidget = new QWidget(centralwidget);
-        gridLayoutWidget->setObjectName(QString::fromUtf8("gridLayoutWidget"));
-        gridLayoutWidget->setGeometry(QRect(40, 10, 581, 251));
-        gridLayout = new QGridLayout(gridLayoutWidget);
-        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        gridLayout->setContentsMargins(0, 0, 0, 0);
+        lineEdit = new QLineEdit(centralwidget);
+        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
+        lineEdit->setGeometry(QRect(80, 90, 113, 26));
         PlantApp->setCentralWidget(centralwidget);
         menubar = new QMenuBar(PlantApp);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -70,6 +66,9 @@ public:
     {
         PlantApp->setWindowTitle(QCoreApplication::translate("PlantApp", "PlantApp", nullptr));
         actionAdd_Plant->setText(QCoreApplication::translate("PlantApp", "Add Plant", nullptr));
+#if QT_CONFIG(shortcut)
+        actionAdd_Plant->setShortcut(QCoreApplication::translate("PlantApp", "Ctrl+A", nullptr));
+#endif // QT_CONFIG(shortcut)
         menuPlant_Reposity->setTitle(QCoreApplication::translate("PlantApp", "Add", nullptr));
     } // retranslateUi
 

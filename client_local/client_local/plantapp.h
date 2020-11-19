@@ -15,6 +15,12 @@ public:
     PlantApp(QWidget *parent = nullptr);
     ~PlantApp();
 
+
+
+private slots:
+    void on_actionAdd_Plant_triggered();
+
+
 private:
     Ui::PlantApp *ui;
 };
