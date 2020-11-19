@@ -11,7 +11,7 @@
 #include <pistache/endpoint.h>
 
 #include "rest_api.h"
-
+#include "plants.h"
 /*
 class sensor_rest
 {
@@ -61,13 +61,24 @@ class sensor_rest : public rest_api {
 	void record_data(const Pistache::Rest::Request &request,
 			 Pistache::Http::ResponseWriter response) override
 	{
-		auto id = request.param(":id").as<std::string>();
+		auto id = request.param(":id").as<int>();
 		auto value = request.param(":value").as<int>();
 
 		//TOOD: database
 
 		std::cout << "Got record data with id: " << id << " and value: " << value <<std::endl;
 		response.send(Pistache::Http::Code::Ok, "recieved");
+
+		for(auto s: plants::get_instance()->get_plants())
+		{
+			if ( s.get_sensor() == id)
+			{
+				// if it is a sensor that is applicable for that plant
+				//
+				// 
+			}
+		}
+
 	}
 };
 
