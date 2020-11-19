@@ -17,8 +17,10 @@ CREATE TABLE sensor_data
 
 CREATE TABLE plant
 (
-    id   INT NOT NULL AUTO_INCREMENT,
-    name NVARCHAR(100),
+    id    INT NOT NULL AUTO_INCREMENT,
+    name  NVARCHAR(100),
+    gridx INT,
+    gridy INT,
     PRIMARY KEY (id)
 );
 
