@@ -38,6 +38,11 @@ class client_api : public rest_api {
 			this->get_router(), "/list_sensors/",
 			Pistache::Rest::Routes::bind(&client_api::list_sensors,
 						     this));
+
+		Pistache::Rest::Routes::Get(
+			this->get_router(), "/get_plants/",
+			Pistache::Rest::Routes::bind(
+				&client_api::get_plant_list, this));
 	}
 
     private:
@@ -80,6 +85,37 @@ class client_api : public rest_api {
 		response.send(Pistache::Http::Code::Ok,
 			      "The JSON goes here as seen above");
 	}
+	void get_plant_list(const Pistache::Rest::Request &request,
+			    Pistache::Http::ResponseWriter response)
+	{
+		auto mime = MIME(Application, Json);
+		rapidjson::Document document;
+		document.SetObject();
+
+		rapidjson::Value names(rapidjson::kArrayType);
+		rapidjson::Value xcoord(rapidjson::kArrayType);
+		rapidjson::Value ycoord(rapidjson::kArrayType);
+
+		rapidjson::Document::AllocatorType &allocator =
+			document.GetAllocator();
+
+		for (auto s : plants::get_instance()->get_plants()) {
+			names.PushBack(s.get_name(), allocator);
+			xcoord.PushBack(s.get_location().first, allocator);
+			ycoord.PushBack(s.get_location().second, allocator);
+		}
+		document.AddMember("Names", names, allocator);
+		document.AddMember("Xcoord", xcoord, allocator);
+		document.AddMember("Ycoord", ycoord,
+				   allocator); // Do I need multiple allocator?
+
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		document.Accept(writer);
+
+		response.send(Pistache::Http::Code::Ok, buffer.GetString(),
+			      mime);
+	}
 };
 
 class local_client_api : public client_api {
@@ -106,11 +142,6 @@ class local_client_api : public client_api {
 			this->get_router(), "/add_plant/",
 			Pistache::Rest::Routes::bind(
 				&local_client_api::add_plant, this));
-
-		Pistache::Rest::Routes::Get(
-			this->get_router(), "/get_plants/",
-			Pistache::Rest::Routes::bind(
-				&local_client_api::get_plant_list, this));
 	}
 
     private:
@@ -170,38 +201,6 @@ class local_client_api : public client_api {
 		plants::get_instance()->add_plant(p);
 
 		//TODO add to databse
-	}
-
-	void get_plant_list(const Pistache::Rest::Request &request,
-			    Pistache::Http::ResponseWriter response)
-	{
-		auto mime = MIME(Application, Json);
-		rapidjson::Document document;
-		document.SetObject();
-
-		rapidjson::Value names(rapidjson::kArrayType);
-		rapidjson::Value xcoord(rapidjson::kArrayType);
-		rapidjson::Value ycoord(rapidjson::kArrayType);
-
-		rapidjson::Document::AllocatorType &allocator =
-			document.GetAllocator();
-
-		for (auto s : plants::get_instance()->get_plants()) {
-			names.PushBack(s.get_name(), allocator);
-			xcoord.PushBack(s.get_location().first, allocator);
-			ycoord.PushBack(s.get_location().second, allocator);
-		}
-		document.AddMember("Names", names, allocator);
-		document.AddMember("Xcoord", xcoord, allocator);
-		document.AddMember("Ycoord", ycoord,
-				   allocator); // Do I need multiple allocator?
-
-		rapidjson::StringBuffer buffer;
-		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-		document.Accept(writer);
-
-		response.send(Pistache::Http::Code::Ok, buffer.GetString(),
-			      mime);
 	}
 };
 
