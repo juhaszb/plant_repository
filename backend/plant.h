@@ -4,9 +4,9 @@
 #include <string>
 #include <utility>
 
-class plant {
+class plant_structure {
     public:
-	plant(std::string name, std::pair<int, int> location,
+	plant_structure(std::string name, std::pair<int, int> location,
 	      unsigned int water_needs, std::pair<int, int> light_needs,
 	      std::pair<int, int> temperature, std::pair<int, int> soil_needs, int id, int sensor)
 		: name{ name }, location{ location },

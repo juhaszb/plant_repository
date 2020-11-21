@@ -6,9 +6,16 @@
 #include "actor_api.h"
 #include "client_api.h"
 #include "plant.h"
-#include "plants.h"
+//#include "plants.h"
+
 
 #include <pistache/net.h>
+
+#include <mysql++.h>
+
+
+
+
 
 void sensor_api1()
 {
@@ -18,6 +25,29 @@ void sensor_api1()
 
 	actor_api sr(addr);
 }
+
+
+void sensor_api_thread()
+{
+	mysqlpp::Connection conn;		
+
+	if(!conn.connect("plantdb", "vm.fured.cloud.bme.hu", "plant", "verysecurepassword", 18719))
+	{
+		std::cout<<"Couldnt connect" <<std::endl;
+	}
+	else
+	{
+		std::cout<<"connected"<<std::endl;
+	}
+
+	Pistache::Port port(6666);
+
+	Pistache::Address addr(Pistache::Ipv4::any(), port);
+
+	sensor_rest sr(addr, conn);
+}
+
+
 
 int main()
 {
@@ -37,13 +67,16 @@ int main()
 
 
 
-	std::thread sensor_api(sensor_api1);
+	std::thread sensor_api(sensor_api_thread);
 
-	Pistache::Port port2(10000);
+	Pistache::Port port2(11112);
 
 	Pistache::Address addr2(Pistache::Ipv4::any(), port2);
+	
+	mysqlpp::Connection conn;
+	conn.connect("plantdb", "vm.fured.cloud.bme.hu", "plant", "verysecurepassword", 18719);
 
-	client_api sr2(addr2);
+	client_api sr2(addr2, conn);
 
 	return 0;
 }
