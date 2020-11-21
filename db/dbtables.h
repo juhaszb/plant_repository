@@ -18,6 +18,11 @@ sql_create_4(sensor_data, 1, 4,
              mysqlpp::sql_int, timestamp,
              mysqlpp::sql_int, data)
 
+sql_create_3(actor, 1, 3,
+             mysqlpp::sql_int, id,
+             mysqlpp::sql_varchar, name,
+             mysqlpp::sql_int, sensor_id)
+
 sql_create_4(plant, 1, 4,
              mysqlpp::sql_int, id,
              mysqlpp::sql_varchar, name,
