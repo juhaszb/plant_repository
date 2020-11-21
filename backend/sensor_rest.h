@@ -14,6 +14,7 @@
 #include <pistache/endpoint.h>
 #include <vector>
 #include <mysql++.h>
+#include <time.h>
 
 #include "rest_api.h"
 #include "../db/dao.hpp"
@@ -89,11 +90,14 @@ class sensor_rest : public rest_api {
 		sensor_data new_sensor_data;
 		new_sensor_data.id = 0;
 		new_sensor_data.sensor_id = id;
-		new_sensor_data.timestamp = 1; // TODO get unix timestamp
+		new_sensor_data.timestamp =  (unsigned)time(NULL); // TODO get unix timestamp
 		new_sensor_data.data = value;
 
 		dao_sensor_data.insert(new_sensor_data);
-	
+
+
+		//TODO: query from requirements which plants use this sensor
+
 //		dao<sensor_data> sensor_dao{conn};  
 //		dao<sensor> 	
 //		sensor_dao.insert({});
