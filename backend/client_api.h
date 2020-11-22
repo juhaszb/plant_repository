@@ -67,7 +67,7 @@ class client_api : public rest_api {
 
 		for (auto s : actors::get_instance()->get_actor_id_list())
 			v.PushBack(s, allocator);
-		document.AddMember("list", v, allocator);
+		document.AddMember("actors", v, allocator);
 
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
@@ -101,24 +101,42 @@ class client_api : public rest_api {
 		rapidjson::Value sensor_list(rapidjson::kArrayType);
 		//rapidjson::Value data(rapidjson::kObjectType);
 
-		dao<sensor_data> dao_sensor_data{ conn };
-		dao<sensor> dao_sensor{ conn };
+		dao<db::sensor_data> dao_sensor_data{ conn };
+		dao<db::sensor> dao_sensor{ conn };
 
-		std::vector<sensor_data> data_values =
+		std::vector<db::sensor_data> data_values =
 			dao_sensor_data.get_all_ids();
 
-		for (auto s : data_values) {
-			rapidjson::Value data(rapidjson::kObjectType);
-			sensor_data sd = dao_sensor_data.get(s.id);
-			data.AddMember("id", sd.id, d.GetAllocator());
-			sensor sens = dao_sensor.get(sd.sensor_id);
-			std::string name = sens.name;
-			data.AddMember("name",
-				       rapidjson::StringRef(name.c_str()),
-				       d.GetAllocator());
-			data.AddMember("data", sd.data, d.GetAllocator());
+		std::vector<db::sensor> sensor_ids = dao_sensor.get_all_ids();
 
-			sensor_list.PushBack(data, d.GetAllocator());
+		for (auto s : sensor_ids) {
+			std::map<std::string, std::string> filter;
+			filter.insert(
+				std::pair("sensor_id", std::to_string(s.id)));
+			std::vector<db::sensor_data> dt =
+				dao_sensor_data.get(filter);
+			if (dt.size() != 0) {
+				
+				std::sort(dt.begin(), dt.end(),
+					  [](const db::sensor_data &a,
+					     const db::sensor_data &b) -> bool {
+						  return a.timestamp >
+							 b.timestamp;
+					  });
+				rapidjson::Value data(rapidjson::kObjectType);
+				data.AddMember("id", s.id, d.GetAllocator());
+
+				db::sensor sens_name = dao_sensor.get(s.id);
+
+				std::string name = sens_name.name;
+				data.AddMember(
+					"name",
+					rapidjson::StringRef(name.c_str()),
+					d.GetAllocator());
+				data.AddMember("data", dt[0].data,
+					       d.GetAllocator());
+				sensor_list.PushBack(data, d.GetAllocator());
+			}
 		}
 
 		d.AddMember("sensors", sensor_list, d.GetAllocator());
@@ -139,12 +157,12 @@ class client_api : public rest_api {
 		d.SetObject();
 		rapidjson::Value plant_list(rapidjson::kArrayType);
 
-		dao<plant> dao_plant{ conn };
+		dao<db::plant> dao_plant{ conn };
 
-		std::vector<plant> data_values = dao_plant.get_all_ids();
+		std::vector<db::plant> data_values = dao_plant.get_all_ids();
 
 		for (auto s : data_values) {
-			plant p = dao_plant.get(s.id);
+			db::plant p = dao_plant.get(s.id);
 			rapidjson::Value plant_single(rapidjson::kObjectType);
 			plant_single.AddMember("id", s.id, d.GetAllocator());
 			std::string name = p.name;
@@ -236,9 +254,9 @@ class local_client_api : public client_api {
 		rapidjson::StringStream s(body.c_str());
 		document.ParseStream(s);
 
-		dao<plant> dao_plant{ conn };
+		dao<db::plant> dao_plant{ conn };
 
-		plant new_plant;
+		db::plant new_plant;
 		new_plant.id = 0;
 		new_plant.name = document["name"].GetString();
 		new_plant.gridx = document["gridx"].GetInt();
@@ -261,10 +279,10 @@ class local_client_api : public client_api {
 */
 		dao_plant.insert(new_plant);
 
-	//	int sensor = document["sensor"].GetInt();
+		//	int sensor = document["sensor"].GetInt();
 
-	//	plant_structure p{ name, location, water_needs, light_needs,
-	//			   temp, soil,	   0,		sensor };
+		//	plant_structure p{ name, location, water_needs, light_needs,
+		//			   temp, soil,	   0,		sensor };
 		//plants::get_instance()->add_plant(p);
 
 		//TODO add to databse
@@ -279,9 +297,9 @@ class local_client_api : public client_api {
 		rapidjson::StringStream s(body.c_str());
 		document.ParseStream(s);
 
-		dao<requirement> dao_requirement{conn};
+		dao<db::requirement> dao_requirement{ conn };
 
-		requirement new_req;
+		db::requirement new_req;
 		new_req.id = 0;
 		new_req.plant_id = document["plant_id"].GetInt();
 		new_req.sensor_id = document["sensor_id"].GetInt();
@@ -289,7 +307,6 @@ class local_client_api : public client_api {
 		new_req.max_value = document["max_value"].GetInt();
 
 		dao_requirement.insert(new_req);
-
 	}
 };
 

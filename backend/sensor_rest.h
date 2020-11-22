@@ -1,7 +1,6 @@
 #ifndef __sensor_rest_api__
 #define __sensor_rest_api__
 
-
 #define EXPAND_SSQLS_STATICS
 
 #include <algorithm>
@@ -53,7 +52,8 @@ private:
 
 class sensor_rest : public rest_api {
     public:
-	explicit sensor_rest(Pistache::Address addr, mysqlpp::Connection & conn ) : rest_api{ addr }, conn{conn} 
+	explicit sensor_rest(Pistache::Address addr, mysqlpp::Connection &conn)
+		: rest_api{ addr }, conn{ conn }
 	{
 		this->serve();
 	}
@@ -72,55 +72,65 @@ class sensor_rest : public rest_api {
 	{
 		auto id = request.param(":id").as<int>();
 		auto value = request.param(":value").as<int>();
-		
-		dao<sensor> dao_sensor{conn};
-		dao<sensor_data> dao_sensor_data{conn};
 
-		std::vector<sensor> ids = dao_sensor.get_all_ids();
-		
-		if(std::find(ids.begin(), ids.end(), id) == ids.end())
-		{
-			std::cout<<"Couldnt find id, so insering it to data table"<< std::endl;
-			sensor new_data;
+		dao<db::sensor> dao_sensor{ conn };
+		dao<db::sensor_data> dao_sensor_data{ conn };
+
+		std::vector<db::sensor> ids = dao_sensor.get_all_ids();
+		std::vector<int> id_int;
+		for (auto s : ids) {
+			id_int.push_back(s.id);
+		}
+
+		if (std::find(id_int.begin(), id_int.end(), id) ==
+		    id_int.end()) {
+			std::cout
+				<< "Couldnt find id, so insering it to data table"
+				<< std::endl;
+			db::sensor new_data;
 			new_data.id = id;
 			new_data.name = request.body();
 			dao_sensor.insert(new_data);
 		}
 
-		sensor_data new_sensor_data;
+		db::sensor_data new_sensor_data;
 		new_sensor_data.id = 0;
 		new_sensor_data.sensor_id = id;
-		new_sensor_data.timestamp =  (unsigned)time(NULL); // TODO get unix timestamp
+		new_sensor_data.timestamp = (unsigned)time(NULL);
 		new_sensor_data.data = value;
 
 		dao_sensor_data.insert(new_sensor_data);
 
+		dao<db::requirement> dao_requirements{ conn };
 
-		//TODO: query from requirements which plants use this sensor
+		
+		//std::string id_string = std::to_string(id);
+		//std::string filter_string = "sensor_id";
+		std::map<std::string,std::string> filter;
+		filter.insert(std::pair("sensor_id", std::to_string(id)));
 
-//		dao<sensor_data> sensor_dao{conn};  
-//		dao<sensor> 	
-//		sensor_dao.insert({});
-		//TOOD: database
+		std::vector<db::requirement> reqs =
+			dao_requirements.get( filter);
 
-		std::cout << "Got record data with id: " << id << " and value: " << value <<std::endl;
-		response.send(Pistache::Http::Code::Ok, "recieved");
+		unsigned int not_matching = 0;
 
-	/*	for(auto s: plants::get_instance()->get_plants())
-		{
-			if ( s.get_sensor() == id)
-			{
-				// if it is a sensor that is applicable for that plant
-				//
-				// 
+		for (auto s : reqs) {
+			if (s.min_value > value || s.max_value < value) {
+				not_matching++;
 			}
 		}
-	*/ 
 
+		if (not_matching > reqs.size() / 2) {
+			//TODO: get the actor responsible and do smth()
+		}
+
+		std::cout << "Got record data with id: " << id
+			  << " and value: " << value << std::endl;
+		response.send(Pistache::Http::Code::Ok, "recieved");
 	}
-private:
-	mysqlpp::Connection conn;
 
+    private:
+	mysqlpp::Connection conn;
 };
 
 #endif

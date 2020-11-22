@@ -19,11 +19,17 @@
 
 void sensor_api1()
 {
-	Pistache::Port port(9999);
+	Pistache::Port port(11111);
 
 	Pistache::Address addr(Pistache::Ipv4::any(), port);
 
-	actor_api sr(addr);
+	mysqlpp::Connection conn;
+	conn.connect("plantdb", "vm.fured.cloud.bme.hu", "plant", "verysecurepassword", 18719);
+
+
+
+
+	actor_api actor_ap(addr, conn);
 }
 
 
@@ -44,7 +50,7 @@ void sensor_api_thread()
 
 	Pistache::Address addr(Pistache::Ipv4::any(), port);
 
-	sensor_rest sr(addr, conn);
+	sensor_rest sensor(addr, conn);
 }
 
 
@@ -68,15 +74,16 @@ int main()
 
 
 	std::thread sensor_api(sensor_api_thread);
+	std::thread actor_trhead(sensor_api1);
 
-	Pistache::Port port2(11112);
+	Pistache::Port port2(3333);
 
 	Pistache::Address addr2(Pistache::Ipv4::any(), port2);
 	
 	mysqlpp::Connection conn;
 	conn.connect("plantdb", "vm.fured.cloud.bme.hu", "plant", "verysecurepassword", 18719);
 
-	client_api sr2(addr2, conn);
+	client_api client_ap(addr2, conn);
 
 	return 0;
 }

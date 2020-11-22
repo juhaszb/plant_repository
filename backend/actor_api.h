@@ -3,21 +3,25 @@
 
 #include "rest_api.h"
 #include "actors.h"
+#include "../db/dao.hpp"
 
+#include <algorithm>
 #include <pistache/http.h>
 #include <pistache/mime.h>
 #include <pistache/net.h>
 #include <pistache/router.h>
 #include <rapidjson/document.h>
+#include <vector>
 
 #include <pistache/thirdparty/serializer/rapidjson.h>
 #include <rapidjson/rapidjson.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/writer.h>
+#include <mysql++.h>
 
 class actor_api : public rest_api {
     public:
-	explicit actor_api(Pistache::Address addr) : rest_api{ addr }
+	explicit actor_api(Pistache::Address addr, mysqlpp::Connection& conn) : rest_api{ addr }, conn{conn}
 	{
 		this->serve();
 	}
@@ -26,14 +30,14 @@ class actor_api : public rest_api {
 	void setup_routes() override
 	{
 		Pistache::Rest::Routes::Put(
-			this->get_router(), "/register/:id",
+			this->get_router(), "/register/:id/:sensor_id/",
 			Pistache::Rest::Routes::bind(&actor_api::register_actor,
 						     this));
 
-		Pistache::Rest::Routes::Post(
+	/*	Pistache::Rest::Routes::Post(
 			this->get_router(), "/get/:id/:value",
 			Pistache::Rest::Routes::bind(&actor_api::recieve_value,
-						     this));
+						     this));*/
 	}
 
     private:
@@ -41,16 +45,41 @@ class actor_api : public rest_api {
 			    Pistache::Http::ResponseWriter response)
 	{
 		auto id = request.param(":id").as<int>();
+		auto sensor_id = request.param(":sensor_id").as<int>();
 		actors::get_instance()->add_actor(id, request.address());
+		
+		dao<db::actor> dao_actor{conn};
+
+		//if not in database add to database
+		std::vector<db::actor> actor_list = dao_actor.get_all_ids();
+		std::vector<int> ids;
+		for( auto s: actor_list)
+		{
+			ids.push_back(s.id);
+		}
+		
+		if(std::find(ids.begin(), ids.end(), id) == ids.end())
+		{
+			db::actor act;
+			act.id = id;
+			act.name = request.body();
+			act.sensor_id = sensor_id;
+			dao_actor.insert(act);
+		}
+
+		//if( std::find(
+
 		response.send(Pistache::Http::Code::Ok, "registered");
 	}
-
+	/*
 	void recieve_value(const Pistache::Rest::Request &request,
 			   Pistache::Http::ResponseWriter response)
 	{
 		auto id = request.param(":id").as<int>();
 		auto value = request.param(":value").as<int>();
 	}
+	*/
+	mysqlpp::Connection conn;
 };
 
 #endif
