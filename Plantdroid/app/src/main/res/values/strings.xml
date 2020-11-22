@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Plantdroid</string>
+    <string name="title_plants">Plants</string>
+    <string name="title_sensors">Sensors</string>
+    <string name="id">ID:</string>
+    <string name="name">Name:</string>
+    <string name="data">Data:</string>
+    <string name="grid_x">Grid X:</string>
+    <string name="grid_y">Grid Y:</string>
+    <string name="title_preferences">Preferences</string>
+    <string name="url_title">Server URL</string>
+</resources>
