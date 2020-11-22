@@ -13,7 +13,18 @@
   <property name="windowTitle">
    <string>PlantApp</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTableWidget" name="sensor_data">
+    <property name="geometry">
+     <rect>
+      <x>500</x>
+      <y>50</y>
+      <width>281</width>
+      <height>451</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -29,7 +40,14 @@
     </property>
     <addaction name="actionAdd_Plant"/>
    </widget>
+   <widget class="QMenu" name="menuControl">
+    <property name="title">
+     <string>Control</string>
+    </property>
+    <addaction name="actionActor"/>
+   </widget>
    <addaction name="menuPlant_Reposity"/>
+   <addaction name="menuControl"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAdd_Plant">
@@ -38,6 +56,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="actionActor">
+   <property name="text">
+    <string>Actor</string>
    </property>
   </action>
  </widget>
