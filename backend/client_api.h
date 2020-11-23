@@ -177,6 +177,7 @@ class local_client_api : public client_api {
 				  mysqlpp::Connection &conn)
 		: client_api{ addr, conn }
 	{
+		this->serve();
 	}
 
     protected:
