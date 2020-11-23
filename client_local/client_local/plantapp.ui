@@ -17,11 +17,70 @@
    <widget class="QTableWidget" name="sensor_data">
     <property name="geometry">
      <rect>
-      <x>500</x>
-      <y>50</y>
-      <width>281</width>
-      <height>451</height>
+      <x>470</x>
+      <y>60</y>
+      <width>311</width>
+      <height>271</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="plant_data">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>60</y>
+      <width>411</width>
+      <height>271</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>20</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Plants</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>20</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Sensors</string>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="requirements_data">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>390</y>
+      <width>721</width>
+      <height>111</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>360</y>
+      <width>91</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Requirements</string>
     </property>
    </widget>
   </widget>
@@ -39,15 +98,9 @@
      <string>Add</string>
     </property>
     <addaction name="actionAdd_Plant"/>
-   </widget>
-   <widget class="QMenu" name="menuControl">
-    <property name="title">
-     <string>Control</string>
-    </property>
-    <addaction name="actionActor"/>
+    <addaction name="actionRequirement"/>
    </widget>
    <addaction name="menuPlant_Reposity"/>
-   <addaction name="menuControl"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAdd_Plant">
@@ -61,6 +114,11 @@
   <action name="actionActor">
    <property name="text">
     <string>Actor</string>
+   </property>
+  </action>
+  <action name="actionRequirement">
+   <property name="text">
+    <string>Requirement</string>
    </property>
   </action>
  </widget>

@@ -26,3 +26,8 @@ void api_server::on_buttonBox_accepted()
     std::cout << port_string << std::endl;
     port = std::stoi(port_string);
 }
+
+void api_server::on_buttonBox_rejected()
+{
+    exit(1);
+}

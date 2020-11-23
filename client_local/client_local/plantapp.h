@@ -3,7 +3,8 @@
 
 #include <QMainWindow>
 #include <string>
-#include <QtNetwork/qnetworkaccessmanager.h>
+#include <pistache/client.h>
+//#include <QtNetwork/qnetworkaccessmanager.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class PlantApp; }
@@ -24,14 +25,26 @@ private slots:
 
     void update_component();
 
-    void network_message(QNetworkReply* reply);
+  /*  void network_message(QNetworkReply* reply);
 
-    void on_actionActor_triggered();
+    void plant_message(QNetworkReply* reply);
+
+    void general_message(QNetworkReply* reply);*/
+
+
+
+    void on_actionRequirement_triggered();
 
 private:
     Ui::PlantApp *ui;
     std::string port;
     std::string ip;
-    QNetworkAccessManager * manager;
+    Pistache::Http::Client client;
+   // QNetworkAccessManager * manager;
+   // QNetworkAccessManager * plant;
+   // QNetworkAccessManager * general;
+
+    void populate_plants(void);
+    void populate_requirements(void);
 };
 #endif // PLANTAPP_H

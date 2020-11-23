@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>api_server</class>
- <widget class="QDialog" name="api_server">
+ <class>add_requirement</class>
+ <widget class="QDialog" name="add_requirement">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>399</width>
-    <height>207</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>170</y>
+     <y>240</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -29,69 +29,96 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QLineEdit" name="ip">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>80</y>
-     <width>113</width>
-     <height>26</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>192.168.2.152</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="port">
-   <property name="geometry">
-    <rect>
-     <x>130</x>
-     <y>120</y>
-     <width>113</width>
-     <height>26</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>6969</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label">
    <property name="geometry">
     <rect>
-     <x>50</x>
-     <y>80</y>
+     <x>20</x>
+     <y>60</y>
      <width>58</width>
      <height>18</height>
     </rect>
    </property>
    <property name="text">
-    <string>Host</string>
+    <string>plant_id</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>50</x>
+     <x>20</x>
+     <y>90</y>
+     <width>58</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>sensor_id</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
      <y>120</y>
      <width>58</width>
      <height>18</height>
     </rect>
    </property>
    <property name="text">
-    <string>Port</string>
+    <string>max_value</string>
    </property>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>130</x>
-     <y>30</y>
-     <width>151</width>
-     <height>16</height>
+     <x>20</x>
+     <y>150</y>
+     <width>58</width>
+     <height>18</height>
     </rect>
    </property>
    <property name="text">
-    <string>Connection Details</string>
+    <string>min_value</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="plant_id">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>60</y>
+     <width>113</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="sensor_id">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>90</y>
+     <width>113</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="max_value">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>120</y>
+     <width>113</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="min_value">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>150</y>
+     <width>113</width>
+     <height>26</height>
+    </rect>
    </property>
   </widget>
  </widget>
@@ -100,7 +127,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>api_server</receiver>
+   <receiver>add_requirement</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -116,7 +143,7 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>api_server</receiver>
+   <receiver>add_requirement</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel">
