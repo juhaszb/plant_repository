@@ -1,5 +1,5 @@
 # compile-time flags
-CXXFLAGS = -std=c++17 -Wall -Wextra -pedantic -Werror  -Wno-unused-parameter -Wno-unused-variable
+CXXFLAGS = -std=c++17 -Wall -Wextra -pedantic -Werror  -Wno-unused-parameter -Wno-unused-variable -Wno-unused-but-set-variable
 # add includes to cflags
 INCLUDES = -I/usr/include/mysql -I/usr/include/mysql++
 CXXFLAGS+= $(INCLUDES)

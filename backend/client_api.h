@@ -38,11 +38,6 @@ class client_api : public rest_api {
 						     this));
 
 		Pistache::Rest::Routes::Get(
-			this->get_router(), "/sensor/:id/",
-			Pistache::Rest::Routes::bind(
-				&client_api::get_sensor_data, this));
-
-		Pistache::Rest::Routes::Get(
 			this->get_router(), "/list_sensors/",
 			Pistache::Rest::Routes::bind(&client_api::list_sensors,
 						     this));
@@ -77,29 +72,18 @@ class client_api : public rest_api {
 			      mime);
 	}
 
-	void get_sensor_data(const Pistache::Rest::Request &request,
-			     Pistache::Http::ResponseWriter response)
-	{
-		auto mime = MIME(Application, Json);
-		rapidjson::Document document;
-
-		//TODO: query sensor data from database and send back the appropriate one
-		auto id = request.param(":id").as<int>();
-
-		response.send(Pistache::Http::Code::Ok,
-			      "put the value here as string");
-	}
-
 	void list_sensors(const Pistache::Rest::Request &request,
 			  Pistache::Http::ResponseWriter response)
 	{
 		auto mime = MIME(Application, Json);
 
+		std::cout<< "list sensors called" << std::endl;
+
 		rapidjson::Document d;
 		d.SetObject();
 
 		rapidjson::Value sensor_list(rapidjson::kArrayType);
-		//rapidjson::Value data(rapidjson::kObjectType);
+
 
 		dao<db::sensor_data> dao_sensor_data{ conn };
 		dao<db::sensor> dao_sensor{ conn };
@@ -116,7 +100,6 @@ class client_api : public rest_api {
 			std::vector<db::sensor_data> dt =
 				dao_sensor_data.get(filter);
 			if (dt.size() != 0) {
-				
 				std::sort(dt.begin(), dt.end(),
 					  [](const db::sensor_data &a,
 					     const db::sensor_data &b) -> bool {
@@ -206,11 +189,6 @@ class local_client_api : public client_api {
 				&local_client_api::set_actor, this));
 
 		Pistache::Rest::Routes::Put(
-			this->get_router(), "/add_sensor/:name/",
-			Pistache::Rest::Routes::bind(
-				&local_client_api::add_sensor, this));
-
-		Pistache::Rest::Routes::Put(
 			this->get_router(), "/add_plant/",
 			Pistache::Rest::Routes::bind(
 				&local_client_api::add_plant, this));
@@ -232,60 +210,36 @@ class local_client_api : public client_api {
 		response.send(Pistache::Http::Code::Ok, "set actor");
 	}
 
-	void add_sensor(const Pistache::Rest::Request &request,
-			Pistache::Http::ResponseWriter response)
-	{
-		//auto id = request.param(":id").as<int>();
-		auto name = request.param(":name").as<std::string>();
-		//TODO: check if it exists if not then add
-
-		response.send(Pistache::Http::Code::Ok, "added sensor");
-	}
-
 	void add_plant(const Pistache::Rest::Request &request,
 		       Pistache::Http::ResponseWriter response)
 	{
-		//auto name = request.param(":name").as<std::string>();
 		std::string body = request.body();
 		rapidjson::Document document;
-
-		//TODO check if not in database
 
 		rapidjson::StringStream s(body.c_str());
 		document.ParseStream(s);
 
 		dao<db::plant> dao_plant{ conn };
 
-		db::plant new_plant;
-		new_plant.id = 0;
-		new_plant.name = document["name"].GetString();
-		new_plant.gridx = document["gridx"].GetInt();
-		new_plant.gridy = document["gridy"].GetInt();
+		std::vector<db::plant> plant_ids = dao_plant.get_all_ids();
+		bool found = false;
 
-		/*	std::string name = document["name"].GetString();
-		std::pair<int, int> location;
-		location.first = document["gridx"].GetInt();
-		location.second = document["gridy"].GetInt();
-		unsigned int water_needs = document["water"].GetInt();
-		std::pair<int, int> light_needs;
-		light_needs.first = document["light_low"].GetInt();
-		light_needs.second = document["light_high"].GetInt();
-		std::pair<int, int> temp;
-		temp.first = document["temp_low"].GetInt();
-		temp.second = document["temp_high"].GetInt();
-		std::pair<int, int> soil;
-		soil.first = document["soil_low"].GetInt();
-		soil.second = document["soil_high"].GetInt();
-*/
-		dao_plant.insert(new_plant);
+		for (auto s : plant_ids) {
+			db::plant p = dao_plant.get(s.id);
+			if (p.gridx == document["gridx"].GetInt() &&
+			    p.gridy == document["gridy"].GetInt())
+				found = true;
+		}
 
-		//	int sensor = document["sensor"].GetInt();
+		if (!found) {
+			db::plant new_plant;
+			new_plant.id = 0;
+			new_plant.name = document["name"].GetString();
+			new_plant.gridx = document["gridx"].GetInt();
+			new_plant.gridy = document["gridy"].GetInt();
 
-		//	plant_structure p{ name, location, water_needs, light_needs,
-		//			   temp, soil,	   0,		sensor };
-		//plants::get_instance()->add_plant(p);
-
-		//TODO add to databse
+			dao_plant.insert(new_plant);
+		}
 	}
 
 	void add_requirement(const Pistache::Rest::Request &request,

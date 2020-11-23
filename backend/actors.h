@@ -17,9 +17,9 @@ class actors {
 		return instance;
 	}
 
-	void add_actor(int id, Pistache::Address addr)
+	void add_actor(int id, Pistache::Address addr, int port)
 	{
-		actor_list.push_back(actor{ id, addr });
+		actor_list.push_back(actor{ id, addr, port });
 	}
 
 	std::vector<int> get_actor_id_list(void)

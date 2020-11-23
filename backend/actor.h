@@ -7,7 +7,7 @@
 class actor
 {
 public:
-	actor(int id, Pistache::Address addr) : id{id}, addr{addr} {}
+	actor(int id, Pistache::Address addr, int port) : id{id}, addr{addr}, port{port} {}
 	
 	int get_id(void) const
 	{
@@ -18,7 +18,7 @@ public:
 	{
 		this->value = value;
 		Pistache::Http::Client client;	
-		std::string page = addr.host()+ ":" + addr.port().toString() + "/send";
+		std::string page = addr.host()+ ":" + std::to_string(port) + "/send";
 		client.post(page).body(value);
 	}
 
@@ -31,6 +31,7 @@ private:
 	int id; 
 	std::string value;
 	Pistache::Address addr;
+	int port;
 };
 
 

@@ -46,7 +46,7 @@ class actor_api : public rest_api {
 	{
 		auto id = request.param(":id").as<int>();
 		auto sensor_id = request.param(":sensor_id").as<int>();
-		actors::get_instance()->add_actor(id, request.address());
+		actors::get_instance()->add_actor(id, request.address(), std::stoi(request.body()));
 		
 		dao<db::actor> dao_actor{conn};
 
