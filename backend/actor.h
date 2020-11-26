@@ -42,6 +42,7 @@ public:
 	{
 		delete client;
 	}
+	actor(actor&&) = delete;
 
 private:
 	int id; 

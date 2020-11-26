@@ -70,7 +70,7 @@ class actor_api : public rest_api {
 			
 			std::cout << "Adding to database" << std::endl;
 
-		}
+		} 
 
 		//if( std::find(
 
