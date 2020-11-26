@@ -35,7 +35,7 @@ void actor_thread(std::string db, std::string host, std::string username, std::s
 }
 
 
-void sensor_thread(std::string db, std::string host, std::string username, std::string password, int db_port, int api_port)
+void sensor_thread(std::string db, std::string host, std::string username, std::string password, int db_port, int api_port, std::string location)
 {
 	mysqlpp::Connection conn;		
 
@@ -52,7 +52,7 @@ void sensor_thread(std::string db, std::string host, std::string username, std::
 
 	Pistache::Address addr(Pistache::Ipv4::any(), port);
 
-	sensor_rest sensor(addr, conn);
+	sensor_rest sensor(addr, conn, location);
 }
 
 void local_thread(std::string db, std::string host, std::string username, std::string password, int db_port, int api_port)
@@ -80,7 +80,8 @@ static struct option long_options[] =
 	{"port", required_argument, NULL, 'p'},
 	{"host", required_argument, NULL, 'h'},
 	{"db", required_argument, NULL, 'd'},
-	{"password", required_argument, NULL, 'P'}
+	{"password", required_argument, NULL, 'P'},
+	{"location", required_argument, NULL, 'L'}
 };
 
 
@@ -111,8 +112,9 @@ int main(int argc, char*argv[])
 	std::string host;
 	std::string db;
 	std::string password;
+	std::string location;
 
-	while((opt = getopt_long(argc,argv, "losauphdP", long_options, &long_index)) != -1)
+	while((opt = getopt_long(argc,argv, "losauphdPL", long_options, &long_index)) != -1)
 	{
 		switch(opt)
 		{
@@ -159,13 +161,20 @@ int main(int argc, char*argv[])
 			case 'P':
 			{
 				password = optarg;
+				break;
+			}
+			case 'L':
+			{
+				location = optarg;
+				break;
 			}
 		}
 	}
 
 
 
-	std::thread sensor_api_thread(sensor_thread, db, host, username, password, port, sensor_port);
+	
+	std::thread sensor_api_thread(sensor_thread, db, host, username, password, port, sensor_port, location);
 	std::thread actor_api_thread(actor_thread, db, host, username, password, port, actor_port);
 	std::thread local_api_thread(local_thread, db, host, username, password, port, local_port);
 
