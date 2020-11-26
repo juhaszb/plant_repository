@@ -105,9 +105,9 @@ class sensor_rest : public rest_api {
 
 		for (auto s : reqs) {
 			if (s.min_value > value)
-				less+=1;
+				less += 1;
 			if (s.max_value < value)
-				more+=1;
+				more += 1;
 		}
 		std::vector<db::actor> act = dao_actor.get(actor_filter);
 
@@ -129,12 +129,15 @@ class sensor_rest : public rest_api {
 					double temp_current =
 						d["current"]["temp_c"]
 							.GetDouble();
-					dao<db::actor> actor_d {conn};
-					std::vector<db::actor> act_l = 	actor_d.get(actor_filter);	
+					dao<db::actor> actor_d{ conn };
+					std::vector<db::actor> act_l =
+						actor_d.get(actor_filter);
 					std::cout << "Temp current"
 						  << temp_current << std::endl;
-					weather_act(temp_current, less, more,
-						    reqs,act_l,value);	
+					if (act_l.size() > 0)
+						weather_act(temp_current, less,
+							    more, reqs, act_l,
+							    value);
 				},
 				[&](std::exception_ptr exc) { ; });
 
@@ -157,16 +160,19 @@ class sensor_rest : public rest_api {
 	mysqlpp::Connection conn;
 	std::string location;
 
-	void weather_act(double temp_current, double  less,double more, std::vector<db::requirement>&reqs, std::vector<db::actor>& act, int value)
+	void weather_act(double temp_current, double less, double more,
+			 std::vector<db::requirement> &reqs,
+			 std::vector<db::actor> &act, int value)
 	{
 		std::cout << "using weather data" << std::endl;
-		if ((less >= (static_cast<double>(reqs.size()) / 2)) && act.size() > 0 &&
-		    temp_current >  value + 5  ) {
+		if ((less >= (static_cast<double>(reqs.size()) / 2)) &&
+		    act.size() > 0 && temp_current > value + 5) {
 			actors::get_instance()->set_value_id(act[0].id, 1);
-			std::cout <<"Sending less" <<std::endl;
-		} else if (more >= (static_cast<double>(reqs.size()) / 2) && temp_current < value - 5 ) {
+			std::cout << "Sending less" << std::endl;
+		} else if (more >= (static_cast<double>(reqs.size()) / 2) &&
+			   temp_current < value - 5) {
 			actors::get_instance()->set_value_id(act[0].id, -1);
-			std::cout <<"Sending more"<<std::endl;
+			std::cout << "Sending more" << std::endl;
 		}
 	}
 };
