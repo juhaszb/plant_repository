@@ -15,6 +15,7 @@
 #include <mysql++.h>
 #include <time.h>
 
+#include "actors.h"
 #include "rest_api.h"
 #include "../db/dao.hpp"
 #include "../db/dbtables.h"
@@ -55,6 +56,7 @@ class sensor_rest : public rest_api {
 	explicit sensor_rest(Pistache::Address addr, mysqlpp::Connection &conn)
 		: rest_api{ addr }, conn{ conn }
 	{
+	
 		this->serve();
 	}
 
@@ -120,7 +122,14 @@ class sensor_rest : public rest_api {
 			}
 		}
 
-		if (not_matching > reqs.size() / 2) {
+		
+		dao<db::actor> dao_actor{conn};
+		std::map<std::string, std::string> actor_filter;
+		filter.insert(std::pair("sensor_id", std::to_string(id)));
+
+		if (true){//not_matching > reqs.size() / 2) {
+			std::vector<db::actor> act = dao_actor.get(filter);
+			actors::get_instance()->set_value_id(act[0].id, 1);	
 			//TODO: get the actor responsible and do smth()
 		}
 
@@ -130,6 +139,7 @@ class sensor_rest : public rest_api {
 	}
 
     private:
+
 	mysqlpp::Connection conn;
 };
 

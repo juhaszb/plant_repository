@@ -25,23 +25,23 @@ class actors {
 	std::vector<int> get_actor_id_list(void)
 	{
 		std::vector<int> ids;
-		for (auto s : actor_list) {
+		for (auto& s : actor_list) {
 			ids.push_back(s.get_id());
 		}
 		return ids;
 	}
 
-	std::string get_value_id(int id)
+	int get_value_id(int id)
 	{
-		for (auto s : actor_list) {
+		for (auto& s : actor_list) {
 			if (s.get_id() == id)
 				return s.get_value();
 		}
 		return 0;
 	}
-	void set_value_id(int id, std::string value)
+	void set_value_id(int id, int value)
 	{
-		for (auto s : actor_list) {
+		for (auto& s : actor_list) {
 			if (s.get_id() == id) {
 				s.set_value(value);
 			}

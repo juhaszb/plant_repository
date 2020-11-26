@@ -27,6 +27,9 @@ class client_api : public rest_api {
 	{
 		this->serve();
 	}
+	explicit client_api(Pistache::Address addr, mysqlpp::Connection & conn, int dumm): rest_api{addr}, conn{conn}
+	{
+	}
 
     protected:
 	mysqlpp::Connection conn;
@@ -48,7 +51,8 @@ class client_api : public rest_api {
 						    this));
 	}
 
-    private:
+private: 
+    
 	//LOCALBA
 	void get_actors(const Pistache::Rest::Request &request,
 			Pistache::Http::ResponseWriter response)
@@ -111,11 +115,14 @@ class client_api : public rest_api {
 
 				db::sensor sens_name = dao_sensor.get(s.id);
 
-				std::string name = sens_name.name;
+				const std::string name = sens_name.name;
+
+				rapidjson::Value name_value(rapidjson::kStringType);
+				name_value.SetString(name.c_str(), name.length(), d.GetAllocator());
+
 				data.AddMember(
 					"name",
-					rapidjson::StringRef(name.c_str()),
-					d.GetAllocator());
+					name_value, d.GetAllocator());
 				data.AddMember("data", dt[0].data,
 					       d.GetAllocator());
 				sensor_list.PushBack(data, d.GetAllocator());
@@ -148,11 +155,15 @@ class client_api : public rest_api {
 			db::plant p = dao_plant.get(s.id);
 			rapidjson::Value plant_single(rapidjson::kObjectType);
 			plant_single.AddMember("id", s.id, d.GetAllocator());
-			std::string name = p.name;
+			
+			const std::string name = p.name;
 
+			std::cout<< "P.name is " <<p.name<<std::endl;
+			rapidjson::Value string_value(rapidjson::kStringType);
+			string_value.SetString(name.c_str(), name.length(), d.GetAllocator());
 			plant_single.AddMember(
-				"name", rapidjson::StringRef(name.c_str()),
-				d.GetAllocator());
+				"name", string_value, d.GetAllocator()
+				);
 			plant_single.AddMember("xcoord", p.gridx,
 					       d.GetAllocator());
 			plant_single.AddMember("ycoord", p.gridy,
@@ -166,6 +177,8 @@ class client_api : public rest_api {
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		d.Accept(writer);
 
+		std::cout<< buffer.GetString() <<std::endl;
+
 		response.send(Pistache::Http::Code::Ok, buffer.GetString(),
 			      mime);
 	}
@@ -175,7 +188,7 @@ class local_client_api : public client_api {
     public:
 	explicit local_client_api(Pistache::Address addr,
 				  mysqlpp::Connection &conn)
-		: client_api{ addr, conn }
+		: client_api{ addr, conn, 1 }
 	{
 		this->serve();
 	}
@@ -198,6 +211,8 @@ class local_client_api : public client_api {
 			this->get_router(), "/add_requirements/",
 			Pistache::Rest::Routes::bind(
 				&local_client_api::add_requirement, this));
+
+		Pistache::Rest::Routes::Get( this->get_router(), "/list_requirements/", Pistache::Rest::Routes::bind(&local_client_api::get_requirements, this));
 	}
 
     private:
@@ -206,7 +221,7 @@ class local_client_api : public client_api {
 	{
 		auto id = request.param(":id").as<int>();
 		std::string value = request.body();
-		actors::get_instance()->set_value_id(id, value);
+		//actors::get_instance()->set_value_id(id, value);
 
 		response.send(Pistache::Http::Code::Ok, "set actor");
 	}
@@ -215,10 +230,14 @@ class local_client_api : public client_api {
 		       Pistache::Http::ResponseWriter response)
 	{
 		std::string body = request.body();
-		rapidjson::Document document;
+		
+		std::cout<<request.body() <<std::endl;
 
+		rapidjson::Document document;
+		document.SetObject();
 		rapidjson::StringStream s(body.c_str());
 		document.ParseStream(s);
+
 
 		dao<db::plant> dao_plant{ conn };
 
@@ -227,8 +246,8 @@ class local_client_api : public client_api {
 
 		for (auto s : plant_ids) {
 			db::plant p = dao_plant.get(s.id);
-			if (p.gridx == document["gridx"].GetInt() &&
-			    p.gridy == document["gridy"].GetInt())
+			if (p.gridx == document["xcoord"].GetInt() &&
+			    p.gridy == document["ycoord"].GetInt())
 				found = true;
 		}
 
@@ -236,11 +255,15 @@ class local_client_api : public client_api {
 			db::plant new_plant;
 			new_plant.id = 0;
 			new_plant.name = document["name"].GetString();
-			new_plant.gridx = document["gridx"].GetInt();
-			new_plant.gridy = document["gridy"].GetInt();
+			new_plant.gridx = document["xcoord"].GetInt();
+			new_plant.gridy = document["ycoord"].GetInt();
 
 			dao_plant.insert(new_plant);
 		}
+		
+		response.send(Pistache::Http::Code::Ok, "sent");
+
+
 	}
 
 	void add_requirement(const Pistache::Rest::Request &request,
@@ -262,6 +285,41 @@ class local_client_api : public client_api {
 		new_req.max_value = document["max_value"].GetInt();
 
 		dao_requirement.insert(new_req);
+
+		response.send(Pistache::Http::Code::Ok, "OK");
+	}
+
+	void get_requirements(const Pistache::Rest::Request & request, Pistache::Http::ResponseWriter response)
+	{
+		auto mime = MIME(Application, Json);
+		
+		dao<db::requirement> dao_requirements{conn};
+		rapidjson::Document d;
+		d.SetObject();
+
+		rapidjson::Value req_list(rapidjson::kArrayType);
+
+		std::vector<db::requirement> reqs = dao_requirements.get_all_ids();
+
+		for( auto s: reqs)
+		{
+			db::requirement req = dao_requirements.get(s.id);
+			rapidjson::Value data(rapidjson::kObjectType);
+			data.AddMember("id", req.id, d.GetAllocator());
+			data.AddMember("plant_id", req.plant_id, d.GetAllocator());
+			data.AddMember("sensor_id", req.sensor_id, d.GetAllocator());
+			data.AddMember("min_value", req.min_value, d.GetAllocator());
+			data.AddMember("max_value", req.max_value, d.GetAllocator());
+			req_list.PushBack(data, d.GetAllocator());
+
+		}
+
+		d.AddMember("requirements", req_list, d.GetAllocator());
+		rapidjson::StringBuffer buffer;
+		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+		d.Accept(writer);
+		response.send(Pistache::Http::Code::Ok, buffer.GetString(), mime);
+
 	}
 };
 
