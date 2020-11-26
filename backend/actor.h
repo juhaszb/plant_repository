@@ -30,7 +30,7 @@ public:
 	
 		std::cout<<"Host:"<<addr.host() << "Port:" <<port <<std::endl;
 
-		client->post(page);
+		client->post(page).send();
 	}
 
 	int get_value(void) const 
