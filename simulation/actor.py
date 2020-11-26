@@ -3,9 +3,14 @@ import bottle
 import requests
 
 
-@bottle.post("/send")
-def send():
-    print("Action request received")
+@bottle.post("/send/<action:int>")
+def send(action):
+    if action == 1:
+        print("Action request received: increase")
+    if action == -1:
+        print("Action request received: decrease")
+    else:
+        bottle.abort(400)
 
 
 def main():
