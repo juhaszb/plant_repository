@@ -27,7 +27,9 @@ public:
 		 page = addr.host()+ ":" + std::to_string(port) + "/send" +"/-1/";
 		else
 		 page = addr.host()+ ":" + std::to_string(port) + "/send" +"/1/";
-		
+	
+		std::cout<<"Host:"<<addr.host() << "Port:" <<port <<std::endl;
+
 		client->post(page);
 	}
 
