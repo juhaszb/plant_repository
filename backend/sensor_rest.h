@@ -137,10 +137,10 @@ class sensor_rest : public rest_api {
 				[&](std::exception_ptr exc) { ; });
 
 		} else {
-			if ((less > (reqs.size() / 2)) && act.size() > 0) {
+			if ((less >= (reqs.size() / 2)) && act.size() > 0) {
 				actors::get_instance()->set_value_id(act[0].id,
 								     1);
-			} else if (more > (reqs.size() / 2)) {
+			} else if (more >= (reqs.size() / 2)) {
 				actors::get_instance()->set_value_id(act[0].id,
 								     -1);
 			}
@@ -157,10 +157,11 @@ class sensor_rest : public rest_api {
 
 	void weather_act(double temp_current, unsigned int less,unsigned  int more, std::vector<db::requirement>&reqs, std::vector<db::actor>& act, int value)
 	{
-		if ((less > (reqs.size() / 2)) && act.size() > 0 &&
+		std::cout << "using weather data" << std::endl;
+		if ((less >= (reqs.size() / 2)) && act.size() > 0 &&
 		    temp_current <  value + 5  ) {
 			actors::get_instance()->set_value_id(act[0].id, 1);
-		} else if (more > (reqs.size() / 2) && temp_current > value - 5 ) {
+		} else if (more >= (reqs.size() / 2) && temp_current > value - 5 ) {
 			actors::get_instance()->set_value_id(act[0].id, -1);
 		}
 	}
