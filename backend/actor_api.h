@@ -56,8 +56,10 @@ class actor_api : public rest_api {
 		for( auto s: actor_list)
 		{
 			ids.push_back(s.id);
+			std::cout <<"Id:" << s.id <<std::endl;
 		}
 		
+
 		if(std::find(ids.begin(), ids.end(), id) == ids.end())
 		{
 			db::actor act;
@@ -65,6 +67,9 @@ class actor_api : public rest_api {
 			act.name = request.body();
 			act.sensor_id = sensor_id;
 			dao_actor.insert(act);
+			
+			std::cout << "Adding to database" << std::endl;
+
 		}
 
 		//if( std::find(
