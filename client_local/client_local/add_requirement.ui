@@ -7,11 +7,11 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>300</height>
+    <height>312</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Add</string>
   </property>
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
@@ -60,8 +60,8 @@
     <rect>
      <x>20</x>
      <y>120</y>
-     <width>58</width>
-     <height>18</height>
+     <width>71</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">
@@ -73,8 +73,8 @@
     <rect>
      <x>20</x>
      <y>150</y>
-     <width>58</width>
-     <height>18</height>
+     <width>71</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">
@@ -119,6 +119,19 @@
      <width>113</width>
      <height>26</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>20</y>
+     <width>131</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Add requirement</string>
    </property>
   </widget>
  </widget>

@@ -13,6 +13,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>
+#include <QtWidgets/QFormLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 
@@ -21,42 +22,66 @@ QT_BEGIN_NAMESPACE
 class Ui_add_plant
 {
 public:
-    QDialogButtonBox *buttonBox;
+    QFormLayout *formLayout;
+    QLabel *label_4;
     QLabel *label;
-    QLabel *label_2;
-    QLabel *label_3;
     QLineEdit *name;
+    QLabel *label_2;
     QLineEdit *xcoord;
+    QLabel *label_3;
     QLineEdit *ycoord;
+    QDialogButtonBox *buttonBox;
 
     void setupUi(QDialog *add_plant)
     {
         if (add_plant->objectName().isEmpty())
             add_plant->setObjectName(QString::fromUtf8("add_plant"));
-        add_plant->resize(400, 300);
-        buttonBox = new QDialogButtonBox(add_plant);
-        buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
-        buttonBox->setGeometry(QRect(30, 240, 341, 32));
-        buttonBox->setOrientation(Qt::Horizontal);
-        buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
+        add_plant->resize(400, 246);
+        formLayout = new QFormLayout(add_plant);
+        formLayout->setObjectName(QString::fromUtf8("formLayout"));
+        label_4 = new QLabel(add_plant);
+        label_4->setObjectName(QString::fromUtf8("label_4"));
+        label_4->setAlignment(Qt::AlignCenter);
+
+        formLayout->setWidget(0, QFormLayout::FieldRole, label_4);
+
         label = new QLabel(add_plant);
         label->setObjectName(QString::fromUtf8("label"));
-        label->setGeometry(QRect(50, 60, 58, 18));
-        label_2 = new QLabel(add_plant);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setGeometry(QRect(50, 90, 58, 18));
-        label_3 = new QLabel(add_plant);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setGeometry(QRect(50, 120, 58, 18));
+
+        formLayout->setWidget(1, QFormLayout::LabelRole, label);
+
         name = new QLineEdit(add_plant);
         name->setObjectName(QString::fromUtf8("name"));
-        name->setGeometry(QRect(180, 60, 113, 26));
+
+        formLayout->setWidget(1, QFormLayout::FieldRole, name);
+
+        label_2 = new QLabel(add_plant);
+        label_2->setObjectName(QString::fromUtf8("label_2"));
+
+        formLayout->setWidget(2, QFormLayout::LabelRole, label_2);
+
         xcoord = new QLineEdit(add_plant);
         xcoord->setObjectName(QString::fromUtf8("xcoord"));
-        xcoord->setGeometry(QRect(180, 90, 113, 26));
+
+        formLayout->setWidget(2, QFormLayout::FieldRole, xcoord);
+
+        label_3 = new QLabel(add_plant);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+
+        formLayout->setWidget(3, QFormLayout::LabelRole, label_3);
+
         ycoord = new QLineEdit(add_plant);
         ycoord->setObjectName(QString::fromUtf8("ycoord"));
-        ycoord->setGeometry(QRect(180, 120, 113, 26));
+
+        formLayout->setWidget(3, QFormLayout::FieldRole, ycoord);
+
+        buttonBox = new QDialogButtonBox(add_plant);
+        buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
+        buttonBox->setOrientation(Qt::Horizontal);
+        buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
+
+        formLayout->setWidget(4, QFormLayout::SpanningRole, buttonBox);
+
 
         retranslateUi(add_plant);
         QObject::connect(buttonBox, SIGNAL(accepted()), add_plant, SLOT(accept()));
@@ -67,7 +92,8 @@ public:
 
     void retranslateUi(QDialog *add_plant)
     {
-        add_plant->setWindowTitle(QCoreApplication::translate("add_plant", "Dialog", nullptr));
+        add_plant->setWindowTitle(QCoreApplication::translate("add_plant", "Add", nullptr));
+        label_4->setText(QCoreApplication::translate("add_plant", "Add plant", nullptr));
         label->setText(QCoreApplication::translate("add_plant", "name", nullptr));
         label_2->setText(QCoreApplication::translate("add_plant", "xcoord", nullptr));
         label_3->setText(QCoreApplication::translate("add_plant", "ycoord", nullptr));

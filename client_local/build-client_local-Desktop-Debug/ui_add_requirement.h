@@ -30,12 +30,13 @@ public:
     QLineEdit *sensor_id;
     QLineEdit *max_value;
     QLineEdit *min_value;
+    QLabel *label_5;
 
     void setupUi(QDialog *add_requirement)
     {
         if (add_requirement->objectName().isEmpty())
             add_requirement->setObjectName(QString::fromUtf8("add_requirement"));
-        add_requirement->resize(400, 300);
+        add_requirement->resize(400, 312);
         buttonBox = new QDialogButtonBox(add_requirement);
         buttonBox->setObjectName(QString::fromUtf8("buttonBox"));
         buttonBox->setGeometry(QRect(30, 240, 341, 32));
@@ -49,10 +50,10 @@ public:
         label_2->setGeometry(QRect(20, 90, 58, 18));
         label_3 = new QLabel(add_requirement);
         label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setGeometry(QRect(20, 120, 58, 18));
+        label_3->setGeometry(QRect(20, 120, 71, 16));
         label_4 = new QLabel(add_requirement);
         label_4->setObjectName(QString::fromUtf8("label_4"));
-        label_4->setGeometry(QRect(20, 150, 58, 18));
+        label_4->setGeometry(QRect(20, 150, 71, 16));
         plant_id = new QLineEdit(add_requirement);
         plant_id->setObjectName(QString::fromUtf8("plant_id"));
         plant_id->setGeometry(QRect(120, 60, 113, 26));
@@ -65,6 +66,9 @@ public:
         min_value = new QLineEdit(add_requirement);
         min_value->setObjectName(QString::fromUtf8("min_value"));
         min_value->setGeometry(QRect(120, 150, 113, 26));
+        label_5 = new QLabel(add_requirement);
+        label_5->setObjectName(QString::fromUtf8("label_5"));
+        label_5->setGeometry(QRect(160, 20, 131, 16));
 
         retranslateUi(add_requirement);
         QObject::connect(buttonBox, SIGNAL(accepted()), add_requirement, SLOT(accept()));
@@ -75,11 +79,12 @@ public:
 
     void retranslateUi(QDialog *add_requirement)
     {
-        add_requirement->setWindowTitle(QCoreApplication::translate("add_requirement", "Dialog", nullptr));
+        add_requirement->setWindowTitle(QCoreApplication::translate("add_requirement", "Add", nullptr));
         label->setText(QCoreApplication::translate("add_requirement", "plant_id", nullptr));
         label_2->setText(QCoreApplication::translate("add_requirement", "sensor_id", nullptr));
         label_3->setText(QCoreApplication::translate("add_requirement", "max_value", nullptr));
         label_4->setText(QCoreApplication::translate("add_requirement", "min_value", nullptr));
+        label_5->setText(QCoreApplication::translate("add_requirement", "Add requirement", nullptr));
     } // retranslateUi
 
 };
