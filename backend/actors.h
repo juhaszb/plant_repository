@@ -19,14 +19,15 @@ class actors {
 
 	void add_actor(int id, Pistache::Address addr, int port)
 	{
-		std::shared_ptr<actor>  act = std::make_shared<actor>(id, addr, port);
+		std::shared_ptr<actor> act =
+			std::make_shared<actor>(id, addr, port);
 		actor_list.push_back(act);
 	}
 
 	std::vector<int> get_actor_id_list(void)
 	{
 		std::vector<int> ids;
-		for (auto& s : actor_list) {
+		for (auto &s : actor_list) {
 			ids.push_back(s->get_id());
 		}
 		return ids;
@@ -34,7 +35,7 @@ class actors {
 
 	int get_value_id(int id)
 	{
-		for (auto& s : actor_list) {
+		for (auto &s : actor_list) {
 			if (s->get_id() == id)
 				return s->get_value();
 		}
@@ -42,7 +43,7 @@ class actors {
 	}
 	void set_value_id(int id, int value)
 	{
-		for (auto& s : actor_list) {
+		for (auto &s : actor_list) {
 			if (s->get_id() == id) {
 				s->set_value(value);
 			}
@@ -54,7 +55,7 @@ class actors {
 	actors(const actors &) = delete;
 	actors(actors &&) = delete;
 	actors &operator=(const actors &) = delete;
-	std::vector<std::shared_ptr<actor>> actor_list;
+	std::vector<std::shared_ptr<actor> > actor_list;
 };
 // std::shared_ptr<actors> actors::instance = nullptr;
 #endif

@@ -55,8 +55,6 @@ class actor_api : public rest_api {
 				id, request.address(),
 				std::stoi(request.body()));
 
-
-
 		dao<db::actor> dao_actor{ conn };
 
 		//if not in database add to database
