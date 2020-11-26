@@ -56,7 +56,6 @@ class sensor_rest : public rest_api {
 	explicit sensor_rest(Pistache::Address addr, mysqlpp::Connection &conn)
 		: rest_api{ addr }, conn{ conn }
 	{
-	
 		this->serve();
 	}
 
@@ -105,14 +104,13 @@ class sensor_rest : public rest_api {
 
 		dao<db::requirement> dao_requirements{ conn };
 
-		
 		//std::string id_string = std::to_string(id);
 		//std::string filter_string = "sensor_id";
-		std::map<std::string,std::string> filter;
+		std::map<std::string, std::string> filter;
 		filter.insert(std::pair("sensor_id", std::to_string(id)));
 
 		std::vector<db::requirement> reqs =
-			dao_requirements.get( filter);
+			dao_requirements.get(filter);
 
 		unsigned int not_matching = 0;
 
@@ -122,14 +120,15 @@ class sensor_rest : public rest_api {
 			}
 		}
 
-		
-		dao<db::actor> dao_actor{conn};
+		dao<db::actor> dao_actor{ conn };
 		std::map<std::string, std::string> actor_filter;
-		filter.insert(std::pair("sensor_id", std::to_string(id)));
+		actor_filter.insert(std::pair("sensor_id", std::to_string(id)));
 
-		if (true){//not_matching > reqs.size() / 2) {
-			std::vector<db::actor> act = dao_actor.get(filter);
-			actors::get_instance()->set_value_id(act[0].id, 1);	
+		if (true) { //not_matching > reqs.size() / 2) {
+			std::vector<db::actor> act = dao_actor.get(actor_filter);
+			if (act.size() > 0)
+				actors::get_instance()->set_value_id(act[0].id,
+								     1);
 			//TODO: get the actor responsible and do smth()
 		}
 
@@ -139,7 +138,6 @@ class sensor_rest : public rest_api {
 	}
 
     private:
-
 	mysqlpp::Connection conn;
 };
 
