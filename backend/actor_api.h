@@ -21,7 +21,8 @@
 
 class actor_api : public rest_api {
     public:
-	explicit actor_api(Pistache::Address addr, mysqlpp::Connection& conn) : rest_api{ addr }, conn{conn}
+	explicit actor_api(Pistache::Address addr, mysqlpp::Connection &conn)
+		: rest_api{ addr }, conn{ conn }
 	{
 		this->serve();
 	}
@@ -34,7 +35,7 @@ class actor_api : public rest_api {
 			Pistache::Rest::Routes::bind(&actor_api::register_actor,
 						     this));
 
-	/*	Pistache::Rest::Routes::Post(
+		/*	Pistache::Rest::Routes::Post(
 			this->get_router(), "/get/:id/:value",
 			Pistache::Rest::Routes::bind(&actor_api::recieve_value,
 						     this));*/
@@ -46,31 +47,35 @@ class actor_api : public rest_api {
 	{
 		auto id = request.param(":id").as<int>();
 		auto sensor_id = request.param(":sensor_id").as<int>();
-		actors::get_instance()->add_actor(id, request.address(), std::stoi(request.body()));
-		
-		dao<db::actor> dao_actor{conn};
+
+		std::vector<int> a_list =
+			actors::get_instance()->get_actor_id_list();
+		if (std::find(a_list.begin(), a_list.end(), id) == a_list.end())
+			actors::get_instance()->add_actor(
+				id, request.address(),
+				std::stoi(request.body()));
+
+
+
+		dao<db::actor> dao_actor{ conn };
 
 		//if not in database add to database
 		std::vector<db::actor> actor_list = dao_actor.get_all_ids();
 		std::vector<int> ids;
-		for( auto s: actor_list)
-		{
+		for (auto s : actor_list) {
 			ids.push_back(s.id);
-			std::cout <<"Id:" << s.id <<std::endl;
+			std::cout << "Id:" << s.id << std::endl;
 		}
-		
 
-		if(std::find(ids.begin(), ids.end(), id) == ids.end())
-		{
+		if (std::find(ids.begin(), ids.end(), id) == ids.end()) {
 			db::actor act;
 			act.id = id;
 			act.name = request.body();
 			act.sensor_id = sensor_id;
 			dao_actor.insert(act);
-			
-			std::cout << "Adding to database" << std::endl;
 
-		} 
+			std::cout << "Adding to database" << std::endl;
+		}
 
 		//if( std::find(
 

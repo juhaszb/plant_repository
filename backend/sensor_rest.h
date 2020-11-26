@@ -124,12 +124,25 @@ class sensor_rest : public rest_api {
 		std::map<std::string, std::string> actor_filter;
 		actor_filter.insert(std::pair("sensor_id", std::to_string(id)));
 
-		if (true) { //not_matching > reqs.size() / 2) {
-			std::vector<db::actor> act = dao_actor.get(actor_filter);
-			if (act.size() > 0)
-				actors::get_instance()->set_value_id(act[0].id,
-								     1);
-			//TODO: get the actor responsible and do smth()
+		unsigned int less = 0;
+		unsigned int more = 0;
+
+		for( auto s: reqs)
+		{
+			if (s.min_value >value)
+				less++;
+			if (s.max_value < value)
+				more++;
+		}
+		std::vector<db::actor> act = dao_actor.get(actor_filter);
+			
+		if( (less > reqs.size()/2) && act.size() > 0 )
+		{
+			actors::get_instance()->set_value_id(act[0].id, 1);
+		}
+		else if ( more > reqs.size()/2 )
+		{
+			actors::get_instance()->set_value_id(act[0].id, -1);
 		}
 
 		std::cout << "Got record data with id: " << id
