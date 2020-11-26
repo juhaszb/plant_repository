@@ -129,10 +129,12 @@ class sensor_rest : public rest_api {
 					double temp_current =
 						d["current"]["temp_c"]
 							.GetDouble();
+					dao<db::actor> actor_d {conn};
+					std::vector<db::actor> act_l = 	actor_d.get(actor_filter);	
 					std::cout << "Temp current"
 						  << temp_current << std::endl;
 					weather_act(temp_current, less, more,
-						    reqs,act,value);	
+						    reqs,act_l,value);	
 				},
 				[&](std::exception_ptr exc) { ; });
 
