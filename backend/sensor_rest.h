@@ -100,14 +100,14 @@ class sensor_rest : public rest_api {
 		std::map<std::string, std::string> actor_filter;
 		actor_filter.insert(std::pair("sensor_id", std::to_string(id)));
 
-		unsigned int less = 0;
-		unsigned int more = 0;
+		double less = 0.0;
+		double more = 0.0;
 
 		for (auto s : reqs) {
 			if (s.min_value > value)
-				less++;
+				less+=1;
 			if (s.max_value < value)
-				more++;
+				more+=1;
 		}
 		std::vector<db::actor> act = dao_actor.get(actor_filter);
 
@@ -116,7 +116,7 @@ class sensor_rest : public rest_api {
 				"http://api.weatherapi.com/v1/current.json?key=c19d353e82c148919e8183238202611&q=" +
 				location;
 
-			std::cout << weather << location << std::endl;
+			std::cout << weather << std::endl;
 
 			auto resp = client->get(weather).send();
 
@@ -155,14 +155,16 @@ class sensor_rest : public rest_api {
 	mysqlpp::Connection conn;
 	std::string location;
 
-	void weather_act(double temp_current, unsigned int less,unsigned  int more, std::vector<db::requirement>&reqs, std::vector<db::actor>& act, int value)
+	void weather_act(double temp_current, double  less,double more, std::vector<db::requirement>&reqs, std::vector<db::actor>& act, int value)
 	{
 		std::cout << "using weather data" << std::endl;
-		if ((less >= (reqs.size() / 2)) && act.size() > 0 &&
-		    temp_current <  value + 5  ) {
+		if ((less >= (static_cast<double>(reqs.size()) / 2)) && act.size() > 0 &&
+		    temp_current >  value + 5  ) {
 			actors::get_instance()->set_value_id(act[0].id, 1);
-		} else if (more >= (reqs.size() / 2) && temp_current > value - 5 ) {
+			std::cout <<"Sending less" <<std::endl;
+		} else if (more >= (static_cast<double>(reqs.size()) / 2) && temp_current < value - 5 ) {
 			actors::get_instance()->set_value_id(act[0].id, -1);
+			std::cout <<"Sending more"<<std::endl;
 		}
 	}
 };
