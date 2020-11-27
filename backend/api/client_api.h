@@ -81,7 +81,7 @@ class client_api : public rest_api {
 	{
 		auto mime = MIME(Application, Json);
 
-		std::cout << "list sensors called" << std::endl;
+		std::cout << "List sensors" << std::endl;
 
 		rapidjson::Document d;
 		d.SetObject();

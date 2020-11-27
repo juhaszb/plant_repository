@@ -62,7 +62,7 @@ class sensor_api : public rest_api {
 		if (std::find(id_int.begin(), id_int.end(), id) ==
 		    id_int.end()) {
 			std::cout
-				<< "Couldnt find id, so insering it to data table"
+				<< "Could not find sensor id, inserting to database"
 				<< std::endl;
 			db::sensor new_data;
 			new_data.id = id;
@@ -150,9 +150,9 @@ class sensor_api : public rest_api {
 								     -1);
 			}
 		}
-		std::cout << "Got record data with id: " << id
+		std::cout << "Received sensor data with id: " << id
 			  << " and value: " << value << std::endl;
-		response.send(Pistache::Http::Code::Ok, "recieved");
+		response.send(Pistache::Http::Code::Ok, "received");
 	}
 
     private:
@@ -164,7 +164,7 @@ class sensor_api : public rest_api {
 			 std::vector<db::requirement> &reqs,
 			 std::vector<db::actor> &act, int value)
 	{
-		std::cout << "using weather data" << std::endl;
+		std::cout << "Using weather data" << std::endl;
 		if ((less >= (static_cast<double>(reqs.size()) / 2)) &&
 		    act.size() > 0 && temp_current > value + 5) {
 			actors::get_instance()->set_value_id(act[0].id, 1);

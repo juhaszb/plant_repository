@@ -30,7 +30,7 @@ class actor {
 			page = addr.host() + ":" + std::to_string(port) +
 			       "/send" + "/1/";
 
-		std::cout << "Host:" << addr.host() << "Port:" << port
+		std::cout << "Host: " << addr.host() << " Port: " << port
 			  << std::endl;
 
 		client->post(page).send();

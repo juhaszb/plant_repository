@@ -62,7 +62,6 @@ class actor_api : public rest_api {
 		std::vector<int> ids;
 		for (auto s : actor_list) {
 			ids.push_back(s.id);
-			std::cout << "Id:" << s.id << std::endl;
 		}
 
 		if (std::find(ids.begin(), ids.end(), id) == ids.end()) {
@@ -72,7 +71,7 @@ class actor_api : public rest_api {
 			act.sensor_id = sensor_id;
 			dao_actor.insert(act);
 
-			std::cout << "Adding to database" << std::endl;
+			std::cout << "Add actor to database" << std::endl;
 		}
 
 		//if( std::find(

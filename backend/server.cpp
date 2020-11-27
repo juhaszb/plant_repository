@@ -33,9 +33,9 @@ void sensor_thread(std::string db, std::string host, std::string username,
 
 	if (!conn.connect(db.c_str(), host.c_str(), username.c_str(),
 			  password.c_str(), db_port)) {
-		std::cout << "Couldnt connect" << std::endl;
+		std::cout << "Could not connect to database" << std::endl;
 	} else {
-		std::cout << "connected" << std::endl;
+		std::cout << "Connected to database" << std::endl;
 	}
 
 	Pistache::Port port(api_port);
