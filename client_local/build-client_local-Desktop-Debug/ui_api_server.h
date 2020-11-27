@@ -84,7 +84,7 @@ public:
         label->setText(QCoreApplication::translate("api_server", "Host", nullptr));
         ip->setText(QCoreApplication::translate("api_server", "192.168.2.152", nullptr));
         label_2->setText(QCoreApplication::translate("api_server", "Port", nullptr));
-        port->setText(QCoreApplication::translate("api_server", "6969", nullptr));
+        port->setText(QCoreApplication::translate("api_server", "7000", nullptr));
     } // retranslateUi
 
 };
