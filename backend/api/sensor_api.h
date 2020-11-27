@@ -142,10 +142,17 @@ class sensor_api : public rest_api {
 				[&](std::exception_ptr exc) { ; });
 
 		} else {
-			if ((less >= (reqs.size() / 2)) && act.size() > 0) {
+			if ((less >= (static_cast<double>(reqs.size()) / 2)) &&
+			    act.size() > 0 &&
+			    actors::get_instance()->get_actor_id_list().size() >
+				    0) {
 				actors::get_instance()->set_value_id(act[0].id,
 								     1);
-			} else if (more >= (reqs.size() / 2)) {
+			} else if (more >= (static_cast<double>(reqs.size()) /
+					    2) &&
+				   actors::get_instance()
+						   ->get_actor_id_list()
+						   .size() > 0) {
 				actors::get_instance()->set_value_id(act[0].id,
 								     -1);
 			}
@@ -164,15 +171,20 @@ class sensor_api : public rest_api {
 			 std::vector<db::requirement> &reqs,
 			 std::vector<db::actor> &act, int value)
 	{
-		std::cout << "Using weather data" << std::endl;
-		if ((less >= (static_cast<double>(reqs.size()) / 2)) &&
-		    act.size() > 0 && temp_current > value + 5) {
-			actors::get_instance()->set_value_id(act[0].id, 1);
-			std::cout << "Sending less" << std::endl;
-		} else if (more >= (static_cast<double>(reqs.size()) / 2) &&
-			   temp_current < value - 5) {
-			actors::get_instance()->set_value_id(act[0].id, -1);
-			std::cout << "Sending more" << std::endl;
+		if (actors::get_instance()->get_actor_id_list().size() > 0) {
+			std::cout << "Using weather data" << std::endl;
+			if ((less >= (static_cast<double>(reqs.size()) / 2)) &&
+			    act.size() > 0 && temp_current > value + 5) {
+				actors::get_instance()->set_value_id(act[0].id,
+								     1);
+				std::cout << "Sending less" << std::endl;
+			} else if (more >= (static_cast<double>(reqs.size()) /
+					    2) &&
+				   temp_current < value - 5) {
+				actors::get_instance()->set_value_id(act[0].id,
+								     -1);
+				std::cout << "Sending more" << std::endl;
+			}
 		}
 	}
 };

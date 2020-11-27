@@ -43,9 +43,11 @@ class actors {
 	}
 	void set_value_id(int id, int value)
 	{
-		for (auto &s : actor_list) {
-			if (s->get_id() == id) {
-				s->set_value(value);
+		if (actor_list.size() != 0) {
+			for (auto &s : actor_list) {
+				if (s->get_id() == id) {
+					s->set_value(value);
+				}
 			}
 		}
 	}
