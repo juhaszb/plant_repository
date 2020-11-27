@@ -6,6 +6,7 @@
 #include <pistache/net.h>
 #include <pistache/router.h>
 #include <pistache/endpoint.h>
+
 class rest_api {
     public:
 	explicit rest_api(Pistache::Address addr)

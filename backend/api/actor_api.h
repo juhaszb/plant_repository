@@ -2,7 +2,7 @@
 #define __actor_api_h__
 
 #include "rest_api.h"
-#include "actors.h"
+#include "../actors.h"
 #include "../db/dao.hpp"
 
 #include <algorithm>

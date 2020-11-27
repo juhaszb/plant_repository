@@ -10,8 +10,6 @@
 
 namespace db
 {
-
-
 sql_create_2(sensor, 1, 2,
              mysqlpp::sql_int, id,
              mysqlpp::sql_varchar, name)
@@ -39,7 +37,6 @@ sql_create_5(requirement, 1, 5,
              mysqlpp::sql_int, sensor_id,
              mysqlpp::sql_int, min_value,
              mysqlpp::sql_int, max_value)
-
 }
 
 #endif //PLANT_REPOSITORY_DBTABLES_H

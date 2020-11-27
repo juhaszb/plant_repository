@@ -1,13 +1,11 @@
-
-
 #include <iostream>
 #include <thread>
 #include <vector>
 #include <getopt.h>
 
-#include "sensor_rest.h"
-#include "actor_api.h"
-#include "client_api.h"
+#include "api/sensor_api.h"
+#include "api/actor_api.h"
+#include "api/client_api.h"
 
 #include <pistache/net.h>
 
@@ -44,7 +42,7 @@ void sensor_thread(std::string db, std::string host, std::string username,
 
 	Pistache::Address addr(Pistache::Ipv4::any(), port);
 
-	sensor_rest sensor(addr, conn, location);
+	sensor_api sensor(addr, conn, location);
 }
 
 void local_thread(std::string db, std::string host, std::string username,
@@ -76,15 +74,6 @@ static struct option long_options[] = {
 
 int main(int argc, char *argv[])
 {
-	//TODO READ all plants from database.
-	//When a new reading from a sensor comes in (responsibility of the sensor_api) query all plants. Whose id
-	//matches (sensor_id) check if the values are in order (within acceptable ranges, if not then use the actors linked to the plant
-
-	while (false) //TODO HERE GOES DATABASE READ for plants
-	{
-		//plants::get_instance()->add_plant(...)
-	}
-
 	int long_index = 0;
 	int opt;
 

@@ -19,15 +19,15 @@
 #include <mysql++.h>
 #include <time.h>
 
-#include "actors.h"
+#include "../actors.h"
 #include "rest_api.h"
 #include "../db/dao.hpp"
 #include "../db/dbtables.h"
 
-class sensor_rest : public rest_api {
+class sensor_api : public rest_api {
     public:
-	explicit sensor_rest(Pistache::Address addr, mysqlpp::Connection &conn,
-			     std::string location)
+	explicit sensor_api(Pistache::Address addr, mysqlpp::Connection &conn,
+			    std::string location)
 		: rest_api{ addr }, conn{ conn }, location{ location }
 	{
 		client = std::make_shared<Pistache::Http::Client>();
@@ -40,7 +40,7 @@ class sensor_rest : public rest_api {
 	{
 		Pistache::Rest::Routes::Post(
 			this->get_router(), "/sensor/:id/:value",
-			Pistache::Rest::Routes::bind(&sensor_rest::record_data,
+			Pistache::Rest::Routes::bind(&sensor_api::record_data,
 						     this));
 	}
 

@@ -10,7 +10,7 @@ ifdef DEBUG
 endif
 
 # Linker flags
-LDFLAGS = -std=c++17 -l pthread -l pistache -l mysqlpp -l mysqlclient  
+LDFLAGS = -std=c++17 -l pthread -l ssl -l crypto -l pistache -l mysqlpp -l mysqlclient  
 
 ifdef DEBUG
 	LDFLAGS+= -g

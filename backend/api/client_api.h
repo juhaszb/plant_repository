@@ -4,8 +4,7 @@
 #define EXPAND_SSQLS_STATICS
 
 #include "rest_api.h"
-#include "actors.h"
-
+#include "../actors.h"
 
 #include "../db/dao.hpp"
 #include "../db/dbtables.h"
