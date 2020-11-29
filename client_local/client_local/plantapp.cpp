@@ -1,6 +1,6 @@
 #include "plantapp.h"
 #include "ui_plantapp.h"
-#include "ui_control_actor.h"
+
 #include "api_server.h"
 #include "add_plant.h"
 #include "add_requirement.h"
