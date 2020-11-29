@@ -14,7 +14,7 @@ def send(action):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Simulate a sensor.")
+    parser = argparse.ArgumentParser(description="Simulate an actor.")
     parser.add_argument("--id", type=int, required=True)
     parser.add_argument("--host", required=True)
     parser.add_argument("--port", type=int, required=True)
